@@ -1,0 +1,26 @@
+version: '3'
+services:
+  wiki:
+    image: mediawiki
+    restart: always
+    ports: 
+      - 80:80
+    links:
+      - db
+    volumes:
+      - images:/var/www/html/images
+      - /home/user/reduser/LocalSettings.php:/var/www/html/LocalSettings.php
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: mediawiki
+      MYSQL_USER: wiki
+      MYSQL_PASSWORD: P@ssw0rd
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  images:
+  db:
