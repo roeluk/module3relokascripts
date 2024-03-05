@@ -1,0 +1,82 @@
+---
+- name: firewalld config
+  hosts: balance
+  become: true
+  tasks:
+    - name: install Firewalld
+      yum:
+        name: firewalld
+
+    - name: on Firewalld
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: add zone cloude
+      command: firewall-cmd --permanent --new-zone=cloude
+
+    - name: add rule cloude
+      command: firewall-cmd --permanent --zone=cloude --add-forward
+
+    - name: add rule cloude
+      command: firewall-cmd --permanent --zone=cloude --add-masquerade
+
+    - name: add interface160 cloude
+      command: firewall-cmd --permanent --zone=cloude --add-interface=ens18
+
+    - name: add interface192 cloude
+      command: firewall-cmd --permanent --zone=cloude --add-interface=ens19
+
+    - name: add interface224 cloude
+      command: firewall-cmd --permanent --zone=cloude --add-interface=ens20
+
+    - name: add port 80/tcp
+      command: firewall-cmd --permanent --zone=cloude --add-port=80/tcp
+
+    - name: add port 80/udp
+      command: firewall-cmd --permanent --zone=cloude --add-port=80/udp
+
+    - name: add port 80/tcp
+      command: firewall-cmd --permanent --zone=cloude --add-port=22/tcp
+
+    - name: add port 80/udp
+      command: firewall-cmd --permanent --zone=cloude --add-port=22/udp
+
+    - name: add port 80/tcp
+      command: firewall-cmd --permanent --zone=cloude --add-port=8080/tcp
+
+    - name: add port 80/udp
+      command: firewall-cmd --permanent --zone=cloude --add-port=8080/udp
+
+    - name: add port 443/tcp
+      command: firewall-cmd --permanent --zone=cloude --add-port=443/tcp
+
+    - name: add port 443/udp
+      command: firewall-cmd --permanent --zone=cloude --add-port=443/udp
+
+    - name: add service http
+      command: firewall-cmd --permanent --zone=cloude --add-service=http
+
+    - name: add service https
+      command: firewall-cmd --permanent --zone=cloude --add-service=https
+    
+    - name: add service https
+      command: firewall-cmd --permanent --zone=cloude --add-service=ssh
+
+    - name: reload
+      command: firewall-cmd --reload
+
+    - name: restart firewalld
+      service:
+        name: firewalld
+        state: restarted
+
+    - name: config /etc/sysctl.conf
+      lineinfile:
+        path: /etc/sysctl.conf
+        line: "net.ipv4.ip_forward = 1"
+        state: present
+
+    - name: restart sysctl
+      command: sysctl --system
