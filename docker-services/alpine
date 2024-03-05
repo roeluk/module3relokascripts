@@ -1,0 +1,17 @@
+# alpine image
+FROM alpine
+# work directory
+WORKDIR /hello
+# copy name.txt to container
+COPY name.txt
+# command when start
+CMD echo "Hello, FIRPO! Greetings from $(cat name.txt)"
+
+
+
+
+#           commands to local registry
+
+#           docker build -t hellofirpo:1.0
+#           docker tag hellofirpo:1.0 localhost:5000/hellofirpo:1.0
+#           docker push localhost:5000/hellofirpo:1.0
