@@ -1,0 +1,47 @@
+---
+- name: haproxy config
+  hosts: balance
+  become: true
+  tasks:
+    - name: hosts config (1)
+      lineinfile:
+        path: /etc/hosts
+        line: "192.168.0.130 haproxy"
+        state: present
+
+    - name: hosts config (2)
+      lineinfile:
+        path: /etc/hosts
+        line: "192.168.1.100 web1.kts.ru"
+        state: present
+
+    - name: hosts config (3)
+      lineinfile:
+        path: /etc/hosts
+        line: "192.168.2.100 web2.kts.ru"
+        state: present
+
+    - name: install haproxy
+      yum:  
+        name: haproxy
+      
+    - name: cert https
+      template:
+        src: proxy.pem.j2
+        dest: /etc/haproxy/proxy.pem
+        owner: root
+        group: root
+        mode: '775'
+
+    - name: config HAProxy
+      template:
+        src: haproxy.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+        owner: root
+        group: root
+        mode: '775'
+        
+    - name: restart
+      service:
+        name: haproxy
+        state: restarted
