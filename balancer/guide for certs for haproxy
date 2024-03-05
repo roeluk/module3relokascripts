@@ -1,0 +1,6 @@
+to create certificate for haproxy
+type this command
+
+
+openssl req -newkey rsa:2048 -nodes -x509 -days 365 -keyout haproxy.key -out haproxy.crt -subj "/CN=$HAPROXY_SSL_SERVER_CERT_CN" && \
+cat haproxy.crt haproxy.key >> proxy.pem
